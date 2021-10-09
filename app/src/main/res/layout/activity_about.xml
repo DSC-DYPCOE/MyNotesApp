@@ -57,11 +57,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/splash_author_name_2"
+            android:text="by GDSC DYPCOE Community"
             android:textColor="@color/colorBlack"
             android:textSize="16sp" />
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/colorBlack"
+        android:textSize="14sp"
+        android:layout_marginVertical="10dp"
+        android:text="Maintained by Adarsh Shete (Android Lead @GDSC)"/>
 
     <TextView
         android:layout_width="wrap_content"

@@ -7,7 +7,7 @@
     tools:context=".activities.NoteActivity"
     >
 
-    <!--<EditText
+    <EditText
         android:id="@+id/edit_note_title"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
@@ -19,18 +19,7 @@
         android:hint="@string/note_title"
         android:padding="18dp"
         android:textColor="@color/colorBlack"
-        android:textSize="@dimen/note_text_size" />-->
-
-    <com.fiberlink.maas360.android.richtexteditor.RichEditText
-        android:id="@+id/rich_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent" />
-
-    <com.fiberlink.maas360.android.richtexteditor.RichTextActions
-        android:id="@+id/rich_edit_text_actions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"/>
+        android:textSize="@dimen/note_text_size" />
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

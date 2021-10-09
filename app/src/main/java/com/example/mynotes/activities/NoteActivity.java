@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -17,7 +16,6 @@ import com.example.mynotes.R;
 import com.example.mynotes.db.DatabaseHelper;
 import com.example.mynotes.pojo.Note;
 import com.example.mynotes.util.Utility;
-import com.fiberlink.maas360.android.richtexteditor.RichEditText;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Objects;
@@ -37,9 +35,6 @@ public class NoteActivity extends AppCompatActivity {
 
         myDB = new DatabaseHelper(this);
         origin = getIntent().getIntExtra(Utility.ORIGIN,-1);
-//        code for setting back navigation arrow button (<--)
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         initialize();
         getPreviousNote();
@@ -47,7 +42,7 @@ public class NoteActivity extends AppCompatActivity {
         btnSaveNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    saveNote();
+                saveNote();
             }
         });
     }
@@ -68,10 +63,6 @@ public class NoteActivity extends AppCompatActivity {
         String noteText = editNoteText.getText().toString().trim();
         String date = Utility.getCurrentDate();
 
-        if (TextUtils.isEmpty(noteText)){
-            editNoteText.setError("Note cannot be empty!");
-            return;
-        }
         boolean isInserted = false;
         
         if (origin == Utility.NEW_NOTE){
@@ -89,7 +80,7 @@ public class NoteActivity extends AppCompatActivity {
 
 //    init views with findViewById() method
     private void initialize() {
-        editNoteText = findViewById(R.id.rich_edit_text);
+        editNoteText = findViewById(R.id.edit_note_title);
         btnSaveNote = findViewById(R.id.btn_save_note);
     }
 
@@ -110,7 +101,6 @@ public class NoteActivity extends AppCompatActivity {
             if(mNote != null){
                 myDB.deleteRecord(mNote.getId());
             }
-            finish();
         }
         
         return super.onOptionsItemSelected(item);
