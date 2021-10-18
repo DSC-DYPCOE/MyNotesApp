@@ -11,6 +11,11 @@
     <string name="btn_save_note">Save</string>
     <string name="description">Description (optional)</string>
     <string name="note_title">Start you note here…</string>
+    <string name="note_is_empty_message">Note cannot be empty. Provide more information.</string>
+    <string name="create_note_failure_message">Failed to create the note. Try again.</string>
+    <string name="create_note_successful_message">Note created successfully</string>
+    <string name="update_note_failure_message">Failed to update the note. Try again.</string>
+    <string name="update_note_successful_message">Note updated successfully</string>
     <string name="get_started">Get started &amp;\n Add some Notes</string>
     <string name="contentDescForImage">Image for showing No Notes in Database</string>
     <string name="email">shete.adarsh@gmail.com</string>

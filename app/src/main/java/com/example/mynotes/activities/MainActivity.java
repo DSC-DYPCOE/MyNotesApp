@@ -1,6 +1,7 @@
 package com.example.mynotes.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -22,6 +23,7 @@ import com.example.mynotes.R;
 import com.example.mynotes.adapters.NoteAdapter;
 import com.example.mynotes.db.DatabaseHelper;
 import com.example.mynotes.pojo.Note;
+import com.example.mynotes.util.NoteResult;
 import com.example.mynotes.util.Utility;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.OnNot
     private RecyclerView rvNotes;
     private FloatingActionButton fab;
     LinearLayout noDataLayout;
+    private Snackbar notificationSnackbar;
     
     private DatabaseHelper myDB;
     public NoteAdapter adapter;
@@ -61,10 +64,16 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.OnNot
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, NoteActivity.class);
-                intent.putExtra(Utility.ORIGIN, Utility.NEW_NOTE);
-                startActivity(intent);
+                Utility.storeNoteOrigin(intent, Utility.NEW_NOTE);
+                startActivityForResult(intent, Utility.NEW_NOTE);
             }
         });
+
+        notificationSnackbar = Snackbar.make(
+                fab,
+                R.string.create_note_successful_message,
+                Snackbar.LENGTH_SHORT
+        ).setAnchorView(fab);
 
         prepareRecyclerView(myNotes);
 
@@ -117,9 +126,9 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.OnNot
     @Override
     public void onNoteClick(int position) {
         Intent intent = new Intent(MainActivity.this, NoteActivity.class);
-        intent.putExtra(Utility.ORIGIN, Utility.EDIT_NOTE);
+        Utility.storeNoteOrigin(intent, Utility.EDIT_NOTE);
         intent.putExtra("existingNote", myNotes.get(position));
-        startActivity(intent);
+        startActivityForResult(intent, Utility.EDIT_NOTE);
     }
 
 //    handling swipe-to-delete
@@ -184,5 +193,11 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.OnNot
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        NoteResult.notify(data, notificationSnackbar);
     }
 }
