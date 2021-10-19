@@ -4,19 +4,20 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.mynotes.R;
 import com.example.mynotes.db.DatabaseHelper;
+import com.example.mynotes.models.ActivityResult;
 import com.example.mynotes.pojo.Note;
+import com.example.mynotes.util.NoteResult;
 import com.example.mynotes.util.Utility;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 
@@ -25,8 +26,11 @@ public class NoteActivity extends AppCompatActivity {
     private DatabaseHelper myDB;
     private EditText editNoteText;
     private FloatingActionButton btnSaveNote;
+    private Snackbar notificationSnackbar;
+
     int origin;
     Note mNote;
+    ActivityResult activityResult = ActivityResult.NO_CHANGE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,11 @@ public class NoteActivity extends AppCompatActivity {
                 saveNote();
             }
         });
+        notificationSnackbar = Snackbar.make(
+                btnSaveNote,
+                R.string.note_is_empty_message,
+                Snackbar.LENGTH_SHORT
+        ).setAnchorView(btnSaveNote);
     }
 
 //    called from onCreate and Fetches data if note is already there
@@ -63,19 +72,37 @@ public class NoteActivity extends AppCompatActivity {
         String noteText = editNoteText.getText().toString().trim();
         String date = Utility.getCurrentDate();
 
+        if (noteText.isEmpty()) {
+            notifyCustomer(R.string.note_is_empty_message);
+            return;
+        }
+
         boolean isInserted = false;
-        
-        if (origin == Utility.NEW_NOTE){
+        boolean isNewNote = origin == Utility.NEW_NOTE;
+        boolean isEditNote = origin == Utility.EDIT_NOTE;
+        if (isNewNote){
             isInserted = myDB.insertData(noteText ,date);
-        } else if (origin == Utility.EDIT_NOTE){
+        } else if (isEditNote){
             isInserted = myDB.updateData(mNote.getId(), noteText, date);
         }
 
-        if (isInserted) {
-            finish();
-        }
-        else Toast.makeText(this, "Failure", Toast.LENGTH_SHORT).show();
 
+
+        if (isInserted) {
+            activityResult = ActivityResult.SUCCESSFUL;
+            finish();
+            return;
+        }
+        notifyCustomer(isNewNote
+                ? R.string.create_note_failure_message
+                : R.string.update_note_failure_message
+        );
+
+    }
+
+    // Displays the snackbar with the message stored within the messageId
+    private void notifyCustomer(int messageId) {
+        notificationSnackbar.setText(messageId).show();
     }
 
 //    init views with findViewById() method
@@ -104,5 +131,12 @@ public class NoteActivity extends AppCompatActivity {
         }
         
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void finish() {
+        NoteResult.storeNoteResult(getIntent(), activityResult);
+        setResult(activityResult.ordinal(), getIntent());
+        super.finish();
     }
 }
